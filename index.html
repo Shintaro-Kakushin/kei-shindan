@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>残る？動く？診断｜けい</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1F3864;--gold:#B08D57;--ink:#1d2433;--sub:#5b6474;--line:#e3e6ec;--bg:#f6f7f9;--card:#fff;}
+  *{box-sizing:border-box}
+  html{color-scheme:light}
+  body{margin:0;font-family:"Noto Sans JP",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7;font-size:16px}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+  header{text-align:center;padding:12px 0 8px}
+  .kicker{color:var(--gold);font-weight:700;font-size:13px;letter-spacing:.08em}
+  h1{font-size:26px;margin:4px 0 6px;color:var(--navy)}
+  .lead{color:var(--sub);font-size:14px;margin:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px;margin:14px 0}
+  .progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:16px 0 4px}
+  .progress i{display:block;height:100%;background:var(--navy);width:0;transition:width .3s}
+  .count{font-size:12px;color:var(--sub);text-align:right}
+  .qtext{font-weight:500;margin:0 0 12px}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .scale button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 2px;font:inherit;font-size:12px;color:var(--ink);cursor:pointer;line-height:1.3}
+  .scale button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .yn{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .yn button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px;font:inherit;color:var(--ink);font-weight:500;cursor:pointer}
+  .yn button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .nav{display:flex;gap:10px;margin-top:16px}
+  .btn{flex:1;border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;cursor:pointer}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:disabled{background:#9aa5b8;cursor:default}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--sub)}
+  .type{border-left:6px solid var(--gold)}
+  .type .label{font-size:13px;color:var(--gold);font-weight:700}
+  .type h2{margin:2px 0 8px;color:var(--navy);font-size:22px}
+  .bars .row{margin:10px 0}
+  .bars .name{display:flex;justify-content:space-between;font-size:13px;color:var(--sub)}
+  .bars .track{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+  .bars .fill{height:100%;background:var(--navy)}
+  h3{font-size:16px;color:var(--navy);margin:0 0 8px}
+  ol{padding-left:1.3em;margin:0}
+  ol li{margin:6px 0}
+  .notice{background:#fff7e8;border:1px solid #f0d9a8;border-radius:12px;padding:14px;font-size:14px}
+  .cta{background:var(--navy);color:#fff;border-radius:14px;padding:18px 16px;text-align:center}
+  .cta p{margin:0 0 10px}
+  .cta .kw{display:inline-block;background:#fff;color:var(--navy);font-weight:700;border-radius:8px;padding:2px 10px;margin:0 2px}
+  .cta a{display:inline-block;background:var(--gold);color:#fff;text-decoration:none;font-weight:700;border-radius:10px;padding:12px 20px;margin-top:4px}
+  footer{font-size:11px;color:var(--sub);margin-top:24px;text-align:center}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">けい｜知らないと損する転職とお金</div>
+    <h1>残る？動く？診断</h1>
+    <p class="lead">13問・約2分。今の会社に残るか、動くかを考える「順番」がわかります。</p>
+  </header>
+
+  <section id="start" class="card">
+    <p style="margin-top:0">「辞めたい気持ち」と「動ける準備」は別のものです。この診断は、次の4つを分けて見ます。</p>
+    <ol>
+      <li><b>今のつらさ</b>：不満の強さ</li>
+      <li><b>社内で変わる見込み</b>：辞めずに解決できる余地</li>
+      <li><b>外での通用度</b>：今の経験で選べる求人があるか</li>
+      <li><b>お金と時期の準備</b>：動き出せる状態か</li>
+    </ol>
+    <p style="font-size:13px;color:var(--sub)">回答はこの画面の中だけで計算し、どこにも送信・保存しません。</p>
+    <div class="nav"><button class="btn primary" id="go">はじめる</button></div>
+  </section>
+
+  <section id="quiz" class="hide">
+    <div class="progress"><i id="bar"></i></div>
+    <div class="count" id="count"></div>
+    <div class="card">
+      <p class="qtext" id="qtext"></p>
+      <div id="answers"></div>
+    </div>
+    <div class="nav">
+      <button class="btn ghost" id="back">戻る</button>
+      <button class="btn primary" id="next" disabled>次へ</button>
+    </div>
+  </section>
+
+  <section id="result" class="hide">
+    <div class="card type">
+      <div class="label" id="tcode"></div>
+      <h2 id="tname"></h2>
+      <p id="tdesc" style="margin:0"></p>
+    </div>
+    <div id="health" class="notice hide">
+      体や心の不調が続いているときは、転職の判断より先に、体を休めることと相談を優先してください。かかりつけの医療機関や、厚生労働省の働く人のメンタルヘルス・ポータルサイト「こころの耳」に相談窓口がまとまっています。
+    </div>
+    <div class="card bars" id="bars"></div>
+    <div class="card">
+      <h3>最初の一歩</h3>
+      <ol id="steps"></ol>
+    </div>
+    <div class="cta">
+      <p>タイプ別の解説（やることと期限の例）をLINEでお送りします。<br>友だち追加のあと <span class="kw" id="kw"></span> と送ってください。</p>
+      <a href="https://lin.ee/9VZoVz9" target="_blank" rel="noopener">LINEで解説を受け取る</a>
+    </div>
+    <div class="nav"><button class="btn ghost" id="again">もう一度診断する</button></div>
+  </section>
+
+  <footer>
+    この診断は考える順番の目安で、退職や転職を勧めるものではありません。<br>
+    けい（@tenshoku_okane_note）／運営：株式会社KAKUSHIN（有料職業紹介事業 許可番号13-ユ-319049）
+  </footer>
+</div>
+
+<script>
+const AX = {A:"今のつらさ", B:"社内で変わる見込み", C:"外での通用度", D:"お金と時期の準備"};
+const Q = [
+  {ax:"A", t:"日曜の夜や朝に、仕事のことで気が重くなる日が、週の半分以上ある"},
+  {ax:"A", t:"今の仕事を3年後も続けている自分を想像すると、気持ちが沈む"},
+  {ax:"A", t:"今の給料や評価に、納得できていない"},
+  {ax:"B", t:"上司や人事に相談すれば、仕事の内容や部署を変えられそうだ"},
+  {ax:"B", t:"この1年で、給料や役割が上がる見込みがはっきりしている"},
+  {ax:"B", t:"不満の原因は、時間がたてば変わりそうなもの（繁忙期、一時的な人間関係など）だ"},
+  {ax:"C", t:"今の仕事で、ほかの会社でも説明できる成果や経験がある"},
+  {ax:"C", t:"同じ職種の求人を見たことがあり、応募できそうなものがあった"},
+  {ax:"C", t:"同じ職種または業界で、3年以上働いている"},
+  {ax:"D", t:"収入が止まっても、生活費の3か月分以上の貯金がある"},
+  {ax:"D", t:"有休の残りやボーナスの時期など、辞める時期に関わることを把握している"},
+  {ax:"D", t:"平日の夜や休日に、転職活動のための時間を週3時間ほど取れる"},
+  {ax:"H", t:"眠れない、食欲がないなど、体や心の不調が2週間以上続いている", yn:true}
+];
+const LABELS = ["まったく<br>違う","あまり<br>違う","どちらとも","やや<br>そう","とても<br>そう"];
+const TYPES = {
+  A:{code:"タイプA", name:"今は残って、整える", kw:"診断A",
+     desc:"今の会社で、まだ良くできる余地があります。辞めるかどうかを考える前に、今の職場をもっと働きやすくするために動く段階です。",
+     steps:["いちばん変えたいことを1つに絞り、「自分で変えられること」か「会社に頼むこと」かを分ける","上司との面談で、何をいつまでに変えたいかを具体的に伝え、評価の基準もすり合わせる","3か月後にもう一度この診断をして、つらさの値が下がったかを確かめる"]},
+  B:{code:"タイプB", name:"在職中に、外を見始める", kw:"診断B",
+     desc:"今の会社で変わる見込みは小さい一方、動くための準備はこれからです。辞めてから探すより、在職中に動くほうが条件で妥協しにくくなります。",
+     steps:["生活費の3か月分を目標に、今月から毎月いくら残すか決める","就業規則で、退職の申し出の期限・ボーナスの支給日の条件・退職金を確かめる","職務経歴を、数字の入った成果3つで書き出す"]},
+  C:{code:"タイプC", name:"動きどき", kw:"診断C",
+     desc:"つらさが大きく、社内で変わる見込みは小さく、動くための準備も整っています。転職活動を本格的に始めるタイミングです。辞める日を決める前に、次の行き先の見通しを立てるのが安全です。",
+     steps:["在職中に応募を始める。応募先は「譲れない条件」を3つ決めてから選ぶ","ボーナスの支給日と有休の残りから、退職日の候補を2つ出しておく","辞めたあとの健康保険と年金の切り替え（期限は20日・14日）を確認しておく"]}
+};
+let i=0; const ans=new Array(Q.length).fill(null);
+const $=id=>document.getElementById(id);
+function show(id){["start","quiz","result"].forEach(s=>$(s).classList.toggle("hide",s!==id));window.scrollTo(0,0);}
+function render(){
+  const q=Q[i];
+  $("bar").style.width=(i/Q.length*100)+"%";
+  $("count").textContent=(i+1)+" / "+Q.length;
+  $("qtext").textContent=q.t;
+  const box=$("answers"); box.innerHTML="";
+  const wrap=document.createElement("div");
+  if(q.yn){
+    wrap.className="yn";
+    [["はい",1],["いいえ",0]].forEach(([l,v])=>{
+      const b=document.createElement("button"); b.textContent=l;
+      if(ans[i]===v) b.classList.add("on");
+      b.onclick=()=>{ans[i]=v;render();};
+      wrap.appendChild(b);
+    });
+  } else {
+    wrap.className="scale";
+    LABELS.forEach((l,k)=>{
+      const b=document.createElement("button"); b.innerHTML=l;
+      if(ans[i]===k+1) b.classList.add("on");
+      b.onclick=()=>{ans[i]=k+1;render(); setTimeout(()=>{ if(i<Q.length-1){i++;render();} },180);};
+      wrap.appendChild(b);
+    });
+  }
+  box.appendChild(wrap);
+  $("next").disabled = ans[i]===null;
+  $("next").textContent = i===Q.length-1 ? "結果を見る" : "次へ";
+  $("back").style.visibility = i===0 ? "hidden" : "visible";
+}
+function score(ax){
+  const v=Q.map((q,k)=>q.ax===ax?ans[k]:null).filter(x=>x!==null);
+  return Math.round((v.reduce((a,b)=>a+b,0)-v.length)/(v.length*4)*100);
+}
+function result(){
+  const s={A:score("A"),B:score("B"),C:score("C"),D:score("D")};
+  const ready=(s.C+s.D)/2;
+  let t;
+  if(s.A<50 || s.B>=60) t="A";
+  else if(ready>=55) t="C";
+  else t="B";
+  const T=TYPES[t];
+  $("tcode").textContent=T.code;
+  $("tname").textContent=T.name;
+  $("tdesc").textContent=T.desc;
+  $("kw").textContent=T.kw;
+  $("steps").innerHTML=T.steps.map(x=>"<li>"+x+"</li>").join("");
+  $("bars").innerHTML="<h3>あなたの4つの値（0〜100）</h3>"+Object.keys(AX).map(k=>
+    '<div class="row"><div class="name"><span>'+AX[k]+'</span><span>'+s[k]+'</span></div><div class="track"><div class="fill" style="width:'+s[k]+'%"></div></div></div>').join("");
+  $("health").classList.toggle("hide", ans[Q.length-1]!==1);
+  show("result");
+}
+$("go").onclick=()=>{i=0;show("quiz");render();};
+$("next").onclick=()=>{ if(ans[i]===null) return; if(i<Q.length-1){i++;render();} else result(); };
+$("back").onclick=()=>{ if(i>0){i--;render();} };
+$("again").onclick=()=>{ans.fill(null);i=0;show("start");};
+</script>
+</body>
+</html>
