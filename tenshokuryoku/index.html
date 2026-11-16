@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>転職力診断（5つの力）｜けい</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1F3864;--gold:#B08D57;--ink:#1d2433;--sub:#5b6474;--line:#e3e6ec;--bg:#f6f7f9;--card:#fff;}
+  *{box-sizing:border-box}
+  html{color-scheme:light}
+  body{margin:0;font-family:"Noto Sans JP",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7;font-size:16px}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+  header{text-align:center;padding:12px 0 8px}
+  .kicker{color:var(--gold);font-weight:700;font-size:13px;letter-spacing:.08em}
+  h1{font-size:26px;margin:4px 0 6px;color:var(--navy)}
+  .lead{color:var(--sub);font-size:14px;margin:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px;margin:14px 0}
+  .progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:16px 0 4px}
+  .progress i{display:block;height:100%;background:var(--navy);width:0;transition:width .3s}
+  .count{font-size:12px;color:var(--sub);text-align:right}
+  .axis{font-size:12px;color:var(--gold);font-weight:700;margin:0 0 4px}
+  .qtext{font-weight:500;margin:0 0 12px}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .scale button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 2px;font:inherit;font-size:12px;color:var(--ink);cursor:pointer;line-height:1.3}
+  .scale button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .nav{display:flex;gap:10px;margin-top:16px}
+  .btn{flex:1;border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;cursor:pointer}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:disabled{background:#9aa5b8;cursor:default}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--sub)}
+  h2{margin:0 0 8px;color:var(--navy);font-size:20px}
+  h3{font-size:16px;color:var(--navy);margin:0 0 8px}
+  .chart{display:block;margin:0 auto;max-width:380px;width:100%}
+  .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;margin-right:6px}
+  .pill.s{background:#e8eef8;color:var(--navy)}
+  .pill.w{background:#f6efe3;color:#8a6a35}
+  ul{padding-left:1.2em;margin:0}
+  li{margin:6px 0}
+  .act{border-left:4px solid var(--gold);padding:4px 0 4px 10px;margin:10px 0}
+  .act b{color:var(--navy)}
+  .cta{background:var(--navy);color:#fff;border-radius:14px;padding:18px 16px;text-align:center}
+  .cta p{margin:0 0 10px}
+  .cta .kw{display:inline-block;background:#fff;color:var(--navy);font-weight:700;border-radius:8px;padding:2px 10px;margin:0 2px}
+  .cta a{display:inline-block;background:var(--gold);color:#fff;text-decoration:none;font-weight:700;border-radius:10px;padding:12px 20px;margin-top:4px}
+  .link{text-align:center;font-size:14px;margin-top:14px}
+  .link a{color:var(--navy)}
+  footer{font-size:11px;color:var(--sub);margin-top:24px;text-align:center}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">けい｜知らないと損する転職とお金</div>
+    <h1>転職力診断（5つの力）</h1>
+    <p class="lead">15問・約3分。採用する側が見ている5つの力のうち、どこが強くて、どこを伸ばすと選べる求人が増えるかがわかります。</p>
+  </header>
+
+  <section id="start" class="card">
+    <p style="margin-top:0">採用する側は、学歴や肩書きよりも、次の5つを見て「この人を採りたいか」を決めています。</p>
+    <ul>
+      <li><b>経験の厚み</b>：任されてきた仕事の範囲</li>
+      <li><b>成果の言語化</b>：成果を数字と工夫で説明できるか</li>
+      <li><b>持ち運べるスキル</b>：会社が変わっても使える力</li>
+      <li><b>応募の幅</b>：応募できる求人の多さ</li>
+      <li><b>学び続ける力</b>：新しいことを身につける力</li>
+    </ul>
+    <p style="font-size:13px;color:var(--sub)">回答はこの画面の中だけで計算し、どこにも送信・保存しません。</p>
+    <div class="nav"><button class="btn primary" id="go">はじめる</button></div>
+  </section>
+
+  <section id="quiz" class="hide">
+    <div class="progress"><i id="bar"></i></div>
+    <div class="count" id="count"></div>
+    <div class="card">
+      <p class="axis" id="axis"></p>
+      <p class="qtext" id="qtext"></p>
+      <div id="answers"></div>
+    </div>
+    <div class="nav">
+      <button class="btn ghost" id="back">戻る</button>
+      <button class="btn primary" id="next" disabled>次へ</button>
+    </div>
+  </section>
+
+  <section id="result" class="hide">
+    <div class="card">
+      <h2>あなたの5つの力</h2>
+      <svg class="chart" id="chart" viewBox="0 0 400 310" role="img" aria-label="5つの力のチャート"></svg>
+      <p id="summary" style="margin:8px 0 0"></p>
+    </div>
+    <div class="card">
+      <h3>伸ばすと効く力と、次の一手</h3>
+      <div id="acts"></div>
+    </div>
+    <div class="card">
+      <h3>年収を上げたい人へ</h3>
+      <p style="margin:0">年収は、本人の力だけでなく「どの業界にいるか」で大きく変わります。経験の厚み・成果の言語化・持ち運べるスキルの3つが高い人は、同じ職種のまま、利益水準の高い業界へ移ると年収が上がりやすくなります。</p>
+    </div>
+    <div class="cta">
+      <p>5つの力それぞれの上げ方をLINEでお送りします。<br>友だち追加のあと <span class="kw">転職力</span> と送ってください。</p>
+      <a href="https://lin.ee/9VZoVz9" target="_blank" rel="noopener">LINEで上げ方を受け取る</a>
+    </div>
+    <div class="link"><a href="../">今の会社に残るか迷っている方は「残る？動く？診断」へ</a></div>
+    <div class="nav"><button class="btn ghost" id="again">もう一度診断する</button></div>
+  </section>
+
+  <footer>
+    この診断は自己評価にもとづく目安で、選考の結果や年収を保証するものではありません。<br>
+    けい（@tenshoku_okane_note）／運営：株式会社KAKUSHIN（有料職業紹介事業 許可番号13-ユ-319049）
+  </footer>
+</div>
+
+<script>
+const AX = ["経験の厚み","成果の言語化","持ち運べるスキル","応募の幅","学び続ける力"];
+const Q = [
+  [0,"今の職種（または近い職種）での経験が、3年以上ある"],
+  [0,"担当している業務を、ほかの人に一通り教えられる"],
+  [0,"後輩の指導や、チーム・案件のまとめ役を任されたことがある"],
+  [1,"自分の成果を、数字（件数・金額・割合・時間）で1つ以上説明できる"],
+  [1,"「何を工夫して、どう変わったか」を2分で話せる"],
+  [1,"職務経歴書を1年以内に書いた、またはすぐに書ける"],
+  [2,"業界や会社が変わっても使える資格・スキルがある（例：簿記、宅建、施工管理、IT、語学など）"],
+  [2,"Excelや業務で使うツールを、周りから頼られる程度に使える"],
+  [2,"社外の人（お客様・取引先）とやり取りする仕事をしている"],
+  [3,"気になる求人の応募条件（学歴・資格・経験年数）を満たしていることが多い"],
+  [3,"勤務地や働き方（転勤・シフト・出社の日数など）に、ある程度柔軟に合わせられる"],
+  [3,"同じ職種の求人が、自分の住む地域で多く出ている"],
+  [4,"この1年で、仕事のために新しく覚えたこと・身につけたことがある"],
+  [4,"経験のない業務を任されても、自分で調べて進められる"],
+  [4,"これから伸ばしたいスキルが、具体的に決まっている"]
+];
+const LABELS = ["まったく<br>違う","あまり<br>違う","どちらとも","やや<br>そう","とても<br>そう"];
+const ACT = [
+  "担当している業務を10個書き出し、それぞれ「誰の代わりに、どこまで任されているか」を一言ずつ添える。経験の厚みは、年数より任された範囲で伝わります。",
+  "成果を「数字＋工夫＋結果」の型で3つ書く（例：問い合わせ対応の手順を見直し、1件あたりの時間を15分から10分にした）。小さな改善でも十分です。",
+  "今の仕事で使っているスキルを、他社の求人票の言葉に置き換えてみる。求人票の「必須」「歓迎」に同じ言葉があれば、それが持ち運べるスキルです。",
+  "条件を1つだけ緩めたら（勤務地・業界・働き方）、応募できる求人がどれだけ増えるかを見る。譲れない条件と譲れる条件を分けると、選択肢が広がります。",
+  "伸ばしたいスキルを1つ決め、1か月で終わる学び（資格の過去問、短い講座など）を始める。面接では「今、何を学んでいるか」もよく聞かれます。"
+];
+let i=0; const ans=new Array(Q.length).fill(null);
+const $=id=>document.getElementById(id);
+function show(id){["start","quiz","result"].forEach(s=>$(s).classList.toggle("hide",s!==id));window.scrollTo(0,0);}
+function render(){
+  const q=Q[i];
+  $("bar").style.width=(i/Q.length*100)+"%";
+  $("count").textContent=(i+1)+" / "+Q.length;
+  $("axis").textContent=AX[q[0]];
+  $("qtext").textContent=q[1];
+  const box=$("answers"); box.innerHTML="";
+  const wrap=document.createElement("div"); wrap.className="scale";
+  LABELS.forEach((l,k)=>{
+    const b=document.createElement("button"); b.innerHTML=l;
+    if(ans[i]===k+1) b.classList.add("on");
+    b.onclick=()=>{ans[i]=k+1;render(); setTimeout(()=>{ if(i<Q.length-1){i++;render();} },180);};
+    wrap.appendChild(b);
+  });
+  box.appendChild(wrap);
+  $("next").disabled = ans[i]===null;
+  $("next").textContent = i===Q.length-1 ? "結果を見る" : "次へ";
+  $("back").style.visibility = i===0 ? "hidden" : "visible";
+}
+function scores(){
+  return AX.map((_,a)=>{
+    const v=Q.map((q,k)=>q[0]===a?ans[k]:null).filter(x=>x!==null);
+    return Math.round((v.reduce((s,x)=>s+x,0)-v.length)/(v.length*4)*100);
+  });
+}
+function chart(s){
+  const cx=200, cy=160, R=95, n=5;
+  const pt=(k,r)=>{const t=-Math.PI/2+k*2*Math.PI/n;return [cx+r*Math.cos(t), cy+r*Math.sin(t)];};
+  let g="";
+  [0.25,0.5,0.75,1].forEach(f=>{
+    g+='<polygon points="'+AX.map((_,k)=>pt(k,R*f).join(",")).join(" ")+'" fill="none" stroke="#e3e6ec"/>';
+  });
+  AX.forEach((_,k)=>{const p=pt(k,R);g+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#e3e6ec"/>';});
+  g+='<polygon points="'+s.map((v,k)=>pt(k,R*Math.max(v,3)/100).join(",")).join(" ")+'" fill="rgba(31,56,100,.22)" stroke="#1F3864" stroke-width="2"/>';
+  AX.forEach((name,k)=>{
+    const p=pt(k,R+30);
+    const anchor = Math.abs(p[0]-cx)<5 ? "middle" : (p[0]>cx ? "start":"end");
+    const dx = anchor==="start"? -12 : anchor==="end"? 12 : 0;
+    g+='<text x="'+(p[0]+dx)+'" y="'+p[1]+'" text-anchor="'+anchor+'" font-size="12" fill="#1d2433">'+name+'</text>';
+    g+='<text x="'+(p[0]+dx)+'" y="'+(p[1]+15)+'" text-anchor="'+anchor+'" font-size="12" font-weight="700" fill="#1F3864">'+s[k]+'</text>';
+  });
+  $("chart").innerHTML=g;
+}
+function result(){
+  const s=scores();
+  chart(s);
+  const order=s.map((v,k)=>[v,k]).sort((a,b)=>b[0]-a[0]);
+  const strong=order[0][1];
+  const weak=order.slice(-2).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+  $("summary").innerHTML='<span class="pill s">いちばんの強み</span>'+AX[strong]+'（'+s[strong]+'）<br>'
+    +'<span class="pill w">伸ばしどころ</span>'+weak.map(k=>AX[k]+'（'+s[k]+'）').join('、');
+  $("acts").innerHTML=weak.map(k=>'<div class="act"><b>'+AX[k]+'</b><br>'+ACT[k]+'</div>').join("");
+  show("result");
+}
+$("go").onclick=()=>{i=0;show("quiz");render();};
+$("next").onclick=()=>{ if(ans[i]===null) return; if(i<Q.length-1){i++;render();} else result(); };
+$("back").onclick=()=>{ if(i>0){i--;render();} };
+$("again").onclick=()=>{ans.fill(null);i=0;show("start");};
+</script>
+</body>
+</html>
